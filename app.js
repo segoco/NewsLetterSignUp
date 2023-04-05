@@ -5,9 +5,9 @@ const https = require("https");
 const path = require("path");
 const fs = require("fs");
 
-const apiKey = "9285e63c89d2756e58eb786b937c6a96-us14";
-const listId = "f41e130261";
-const dataCenter = "us14";
+const { apiKey } = require("./secrets");
+const { listId } = require("./secrets");
+const { dataCenter } = require("./secrets");
 
 const app = express();
 app.use(express.static("public"));
