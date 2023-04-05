@@ -22,7 +22,7 @@ app.post("/signup", (req, res) => {
   const { firstName } = req.body;
   const { lastName } = req.body;
   const { email } = req.body;
-  const data = JSON.stringify({
+  let data = JSON.stringify({
     email_address: email,
     status: "subscribed",
     merge_fields: {
@@ -41,7 +41,7 @@ app.post("/signup", (req, res) => {
     },
   };
   const request = https.request(options, (response) => {
-    let data = "";
+    data = "";
     response.on("data", (chunk) => {
       data += chunk;
     });
