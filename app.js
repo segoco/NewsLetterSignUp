@@ -5,9 +5,9 @@ const https = require("https");
 const path = require("path");
 const fs = require("fs");
 
-const { apiKey } = require("./secrets");
-const { listId } = require("./secrets");
-const { dataCenter } = require("./secrets");
+const { apiKey } = require("./secrets.js");
+const { listId } = require("./secrets.js");
+const { dataCenter } = require("./secrets.js");
 
 const app = express();
 app.use(express.static("public"));
