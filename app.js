@@ -51,6 +51,7 @@ app.post("/signup", (req, res) => {
         res.sendFile(htmlSuccess);
       } else {
         const htmlFailure = path.join(__dirname, "/failure.html");
+        console.log(JSON.parse(data));
         const errorDetail = JSON.parse(data).title;
         fs.readFile(htmlFailure, "utf-8", (err, html) => {
           if (!err) {
