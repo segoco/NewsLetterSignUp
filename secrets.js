@@ -1,5 +1,5 @@
 module.exports = {
-  apiKey: '0a25d932dc9655c3f60aa04d955a4a36-us14',
+  apiKey: '2354c013217d2bf1b6c6ba127290110e-us14',
   listId: 'f41e130261',
   dataCenter: 'us14',
 };
