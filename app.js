@@ -1,30 +1,32 @@
 /* eslint-disable quotes */
-const express = require("express");
-const bodyParser = require("body-parser");
-const https = require("https");
-const path = require("path");
-const fs = require("fs");
+const express = require('express');
+const bodyParser = require('body-parser');
+const https = require('https');
+const path = require('path');
+const fs = require('fs');
 
-const { apiKey } = require("./secrets2.js");
-const { listId } = require("./secrets2.js");
-const { dataCenter } = require("./secrets2.js");
+require('dotenv').config();
+
+const apiKey = process.env.API_KEY;
+const listId = process.env.LIST_ID;
+const dataCenter = process.env.DATA_CENTER;
 
 const app = express();
-app.use(express.static("public"));
+app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // routes
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "/signup.html"));
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '/signup.html'));
 });
 
-app.post("/signup", (req, res) => {
+app.post('/signup', (req, res) => {
   const { firstName } = req.body;
   const { lastName } = req.body;
   const { email } = req.body;
   let data = JSON.stringify({
     email_address: email,
-    status: "subscribed",
+    status: 'subscribed',
     merge_fields: {
       FNAME: firstName,
       LNAME: lastName,
@@ -33,29 +35,28 @@ app.post("/signup", (req, res) => {
   const options = {
     hostname: `${dataCenter}.api.mailchimp.com`,
     path: `/3.0/lists/${listId}/members`,
-    method: "POST",
+    method: 'POST',
     headers: {
       Authorization: `apikey ${apiKey}`,
-      "Content-Type": "application/json",
-      "Content-Length": data.length,
+      'Content-Type': 'application/json',
+      'Content-Length': data.length,
     },
   };
   const request = https.request(options, (response) => {
-    data = "";
-    response.on("data", (chunk) => {
+    data = '';
+    response.on('data', (chunk) => {
       data += chunk;
     });
-    response.on("end", () => {
+    response.on('end', () => {
       if (response.statusCode === 200) {
-        const htmlSuccess = path.join(__dirname, "/success.html");
+        const htmlSuccess = path.join(__dirname, '/success.html');
         res.sendFile(htmlSuccess);
       } else {
-        const htmlFailure = path.join(__dirname, "/failure.html");
-        console.log(JSON.parse(data));
+        const htmlFailure = path.join(__dirname, '/failure.html');
         const errorDetail = JSON.parse(data).title;
-        fs.readFile(htmlFailure, "utf-8", (err, html) => {
+        fs.readFile(htmlFailure, 'utf-8', (err, html) => {
           if (!err) {
-            const newHtmlFailure = html.replace("{{errorMessage}}", errorDetail);
+            const newHtmlFailure = html.replace('{{errorMessage}}', errorDetail);
             res.send(newHtmlFailure);
           }
         });
@@ -63,17 +64,17 @@ app.post("/signup", (req, res) => {
     });
   });
 
-  request.on("error", (error) => {
+  request.on('error', (error) => {
     console.error(error);
   });
   request.write(data);
   request.end();
 });
 
-app.post("/failure", (req, res) => {
-  res.redirect("/");
+app.post('/failure', (req, res) => {
+  res.redirect('/');
 });
 
 app.listen(process.env.PORT || 3000, () => {
-  console.log("Server running...");
+  console.log('Server running...');
 });

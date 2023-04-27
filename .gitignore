@@ -1,2 +1,5 @@
-secrets2.js
+node_modules
+
 .eslintrc.json
+
+.env
